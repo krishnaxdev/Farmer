@@ -47,17 +47,27 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        /* New print-specific styles for the small receipt */
+        .small-receipt {
+            display: none;
+            width: 58mm; /* Common thermal printer width */
+            font-family: 'monospace';
+            font-size: 10px;
+            color: #000;
+        }
+        
         @media print {
-            body > *:not(.print-container) {
+            body > *:not(.small-receipt) {
                 display: none;
             }
-            .print-container {
+            .small-receipt {
                 display: block;
                 position: absolute;
                 top: 0;
                 left: 0;
-                width: 100%;
-                height: 100%;
+                width: 58mm;
+                padding: 5mm;
             }
         }
     </style>
@@ -157,8 +167,8 @@
                     <button type="button" id="save-bill-btn" class="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-600 transition-colors">
                         Save Bill
                     </button>
-                    <button type="button" id="print-receipt-btn" class="flex-1 bg-purple-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-purple-600 transition-colors">
-                        Print Receipt
+                    <button type="button" id="print-small-receipt-btn" class="flex-1 bg-purple-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-purple-600 transition-colors">
+                        Print Small Receipt
                     </button>
                     <button type="button" id="export-csv-btn" class="flex-1 bg-indigo-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-indigo-600 transition-colors">
                         Export to CSV
@@ -236,42 +246,37 @@
         </div>
     </div>
 
-    <!-- Printable Receipt Section (for a farmer's receipt) -->
-    <div id="print-receipt-container" class="print-container hidden p-8 max-w-3xl mx-auto bg-white text-gray-800">
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-primary">Kamlesh Mandi</h1>
-            <p class="text-md text-gray-600">Nagdilpur, Dullahpur, Ghazipur up</p>
-            <p class="text-lg text-gray-600 mt-4">Bill for: <span id="receipt-farmer-name" class="font-semibold"></span></p>
+    <!-- Printable Small Receipt Section -->
+    <div id="small-receipt-container" class="small-receipt">
+        <div style="text-align: center; margin-bottom: 10px;">
+            <strong style="font-size: 1.2em;">Kamlesh Mandi</strong><br>
+            <span style="font-size: 0.8em;">Nagdilpur, Dullahpur, Ghazipur up</span><br>
+            <hr style="border-color: #000; margin: 5px 0;">
         </div>
-        <div class="space-y-6">
-            <div class="p-6 border border-gray-300 rounded-xl bg-gray-50">
-                <h2 class="text-2xl font-semibold text-primary mb-4">Bill Details</h2>
-                <div class="grid grid-cols-2 gap-4">
-                    <p><strong>Date:</strong> <span id="receipt-date"></span></p>
-                    <p><strong>Village:</strong> <span id="receipt-village-name"></span></p>
-                    <p><strong>Phone:</strong> <span id="receipt-phone-number"></span></p>
-                    <p><strong>Total Bags:</strong> <span id="receipt-total-bags">0</span></p>
-                    <p><strong>Total Kgs:</strong> <span id="receipt-total-kgs">0.00 kg</span></p>
-                </div>
-            </div>
-            <div class="p-6 border border-gray-300 rounded-xl bg-gray-50">
-                <h2 class="text-2xl font-semibold text-primary mb-4">Summary</h2>
-                <div class="space-y-2">
-                    <div class="flex justify-between font-medium text-lg">
-                        <span>Rate per Kg:</span>
-                        <span id="receipt-summary-rate">₹0.00</span>
-                    </div>
-                </div>
-            </div>
-            <div class="p-6 border-4 border-primary rounded-xl text-center bg-primary-100">
-                <div class="flex justify-between items-center text-3xl font-bold text-primary">
-                    <span>Total Price:</span>
-                    <span id="receipt-total-price" class="text-4xl">₹0.00</span>
-                </div>
-            </div>
+        
+        <div style="margin-bottom: 10px;">
+            Bill for: <span id="receipt-farmer-name-small"></span><br>
+            Date: <span id="receipt-date-small"></span><br>
+            Village: <span id="receipt-village-name-small"></span><br>
+            Phone: <span id="receipt-phone-number-small"></span><br>
         </div>
-        <div class="text-center mt-8 text-gray-500 text-sm">
-            <p>Thank you for your business!</p>
+
+        <div style="margin-bottom: 10px;">
+            <hr style="border-color: #000; margin: 5px 0;">
+            <strong style="font-size: 1.1em;">Summary</strong>
+            <hr style="border-color: #000; margin: 5px 0;">
+            Total Bags: <span id="receipt-total-bags-small">0</span><br>
+            Total Kgs: <span id="receipt-total-kgs-small">0.00 kg</span><br>
+            Rate per Kg: <span id="receipt-summary-rate-small">₹0.00</span><br>
+            <hr style="border-color: #000; margin: 5px 0;">
+        </div>
+        
+        <div style="text-align: center; margin-top: 10px;">
+            <strong style="font-size: 1.5em;">Total Price: <span id="receipt-total-price-small">₹0.00</span></strong>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px; font-size: 0.8em; color: #555;">
+            <p>Thank you!</p>
         </div>
     </div>
 
@@ -303,10 +308,11 @@
         const modalMessage = document.getElementById('modal-message');
         const modalConfirmBtn = document.getElementById('modal-confirm-btn');
         const modalCancelBtn = document.getElementById('modal-cancel-btn');
-        const printReceiptBtn = document.getElementById('print-receipt-btn');
+        const printSmallReceiptBtn = document.getElementById('print-small-receipt-btn');
         const exportCsvBtn = document.getElementById('export-csv-btn');
         const importCsvBtn = document.getElementById('import-csv-btn');
         const csvFileInput = document.getElementById('csv-file-input');
+        const smallReceiptContainer = document.getElementById('small-receipt-container');
 
         // Initial setup
         document.addEventListener('DOMContentLoaded', () => {
@@ -442,20 +448,20 @@
             }
         };
 
-        // Populate receipt content and print
-        printReceiptBtn.addEventListener('click', () => {
+        // Populate small receipt content and print
+        printSmallReceiptBtn.addEventListener('click', () => {
             if (!farmerNameInput.value) {
                 showMessageModal('Validation Error', 'Please enter the farmer\'s name before printing a receipt.');
                 return;
             }
-            document.getElementById('receipt-farmer-name').textContent = farmerNameInput.value || 'N/A';
-            document.getElementById('receipt-village-name').textContent = villageNameInput.value || 'N/A';
-            document.getElementById('receipt-phone-number').textContent = phoneNumberInput.value || 'N/A';
-            document.getElementById('receipt-date').textContent = dateInput.value;
-            document.getElementById('receipt-total-bags').textContent = totalBagsSpan.textContent;
-            document.getElementById('receipt-total-kgs').textContent = totalKgsSpan.textContent;
-            document.getElementById('receipt-summary-rate').textContent = summaryRateSpan.textContent;
-            document.getElementById('receipt-total-price').textContent = totalPriceSpan.textContent;
+            document.getElementById('receipt-farmer-name-small').textContent = farmerNameInput.value || 'N/A';
+            document.getElementById('receipt-village-name-small').textContent = villageNameInput.value || 'N/A';
+            document.getElementById('receipt-phone-number-small').textContent = phoneNumberInput.value || 'N/A';
+            document.getElementById('receipt-date-small').textContent = dateInput.value;
+            document.getElementById('receipt-total-bags-small').textContent = totalBagsSpan.textContent;
+            document.getElementById('receipt-total-kgs-small').textContent = totalKgsSpan.textContent;
+            document.getElementById('receipt-summary-rate-small').textContent = summaryRateSpan.textContent;
+            document.getElementById('receipt-total-price-small').textContent = totalPriceSpan.textContent;
             window.print();
         });
 

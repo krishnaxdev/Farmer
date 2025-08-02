@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kamlesh Mandi Billing System</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#4B5563',
+                        background: '#F9FAFB',
+                        card: '#FFFFFF',
+                        darkBackground: '#111827',
+                        darkCard: '#1F2937',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease;
+        }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media print {
+            body > *:not(.print-container) {
+                display: none;
+            }
+            .print-container {
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="bg-background text-secondary dark:bg-darkBackground dark:text-gray-300">
+
+    <!-- Main Container -->
+    <div class="container mx-auto p-4 md:p-8">
+
+        <!-- Header -->
+        <header class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-bold text-primary dark:text-indigo-400">Kamlesh Mandi Billing System</h1>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Nagdilpur, Dullahpur, Ghazipur up</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <!-- Light/Dark Mode Toggle -->
+                <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                    <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.586 17.586a.75.75 0 0 1 1.06-1.06l1.597 1.596a.75.75 0 0 1-1.06 1.06l-1.596-1.597ZM12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12ZM20.25 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5h2.25a.75.75 0 0 1 .75.75ZM17.586 6.414a.75.75 0 0 1 0 1.06l-1.596 1.597a.75.75 0 0 1-1.06-1.06l1.597-1.596a.75.75 0 0 1 1.06 0ZM4.5 12a.75.75 0 0 1-.75.75H2.25a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 .75.75ZM6.414 17.586a.75.75 0 0 1-1.06-1.06l-1.597 1.596a.75.75 0 0 1 1.06 1.06l1.596-1.597ZM18.914 18.914a.75.75 0 0 1-1.06 0l-1.597-1.596a.75.75 0 1 1 1.06-1.06l1.596 1.597a.75.75 0 0 1 0 1.06ZM12 21.75a.75.75 0 0 1-.75-.75v-2.25a.75.75 0 0 1 1.5 0v2.25a.75.75 0 0 1-.75.75ZM15 3a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5h-1.5A.75.75 0 0 1 15 3ZM2.25 12a.75.75 0 0 1 .75-.75h2.25a.75.75 0 0 1 0 1.5H3a.75.75 0 0 1-.75-.75ZM17.586 6.414a.75.75 0 0 1 1.06 0l1.597 1.596a.75.75 0 1 1-1.06 1.06l-1.596-1.597a.75.75 0 0 1 0-1.06Z"/>
+                    </svg>
+                    <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-400 hidden" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9.598 12.378c.361-.264.808-.415 1.282-.415a2.123 2.123 0 0 1 1.282.415c.361.264.625.641.761 1.077a2.123 2.123 0 0 1-.761 2.361 2.123 2.123 0 0 1-1.282.415 2.123 2.123 0 0 1-1.282-.415 2.123 2.123 0 0 1-.761-2.361c.136-.436.4-.813.761-1.077ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z"/>
+                    </svg>
+                </button>
+                <!-- Saved Bills Button -->
+                <button id="show-saved-bills" class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                    Saved Bills
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Billing Form Section -->
+            <div class="lg:col-span-2 bg-card dark:bg-darkCard p-6 rounded-2xl shadow-lg">
+                <form id="billing-form" class="space-y-6">
+                    <!-- Farmer Details -->
+                    <div class="space-y-4">
+                        <h2 class="text-xl md:text-2xl font-semibold text-primary">Farmer Details</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="farmer-name" class="block text-sm font-medium mb-1">Farmer Name</label>
+                                <input type="text" id="farmer-name" name="farmerName" required
+                                    class="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-indigo-400 transition-colors">
+                            </div>
+                            <div>
+                                <label for="village-name" class="block text-sm font-medium mb-1">Village Name</label>
+                                <input type="text" id="village-name" name="villageName" required
+                                    class="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-indigo-400 transition-colors">
+                            </div>
+                            <div>
+                                <label for="phone-number" class="block text-sm font-medium mb-1">Phone Number</label>
+                                <input type="tel" id="phone-number" name="phoneNumber"
+                                    class="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-indigo-400 transition-colors">
+                            </div>
+                            <div>
+                                <label for="date" class="block text-sm font-medium mb-1">Date</label>
+                                <input type="date" id="date" name="date" readonly
+                                    class="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-indigo-400 transition-colors cursor-not-allowed">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price Management -->
+                    <div class="space-y-4">
+                        <h2 class="text-xl md:text-2xl font-semibold text-primary">Price Details</h2>
+                        <div>
+                            <label for="rate-per-kg" class="block text-sm font-medium mb-1">Rate per Kg (₹)</label>
+                            <input type="number" id="rate-per-kg" name="ratePerKg" value="0.00" step="0.01" min="0" required
+                                class="w-full md:w-1/2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-indigo-400 transition-colors">
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Bag Entry -->
+                    <div class="space-y-4">
+                        <h2 class="text-xl md:text-2xl font-semibold text-primary">Bag Weights (in Kgs)</h2>
+                        <div id="bag-entry-container" class="space-y-3">
+                            <!-- Initial bag entry -->
+                            <div class="flex items-center space-x-2">
+                                <label for="bag-1" class="w-16 flex-shrink-0 text-sm font-medium">Bag 1</label>
+                                <input type="number" id="bag-1" class="bag-weight-input w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-indigo-400 transition-colors" value="" min="0" placeholder="0.00">
+                            </div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
+                            <button type="button" id="add-bag-btn" class="flex-1 bg-primary text-white py-2 px-4 rounded-lg font-medium hover:bg-indigo-600 transition-colors">
+                                Add Bag
+                            </button>
+                            <button type="button" id="remove-bag-btn" class="flex-1 bg-red-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-red-600 transition-colors">
+                                Remove Last Bag
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-6">
+                    <button type="button" id="save-bill-btn" class="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-600 transition-colors">
+                        Save Bill
+                    </button>
+                    <button type="button" id="print-receipt-btn" class="flex-1 bg-purple-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-purple-600 transition-colors">
+                        Print Receipt
+                    </button>
+                    <button type="button" id="export-csv-btn" class="flex-1 bg-indigo-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-indigo-600 transition-colors">
+                        Export to CSV
+                    </button>
+                    <button type="button" id="import-csv-btn" class="flex-1 bg-teal-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-teal-600 transition-colors">
+                        Import from CSV
+                    </button>
+                    <input type="file" id="csv-file-input" class="hidden" accept=".csv">
+                </div>
+                <div class="mt-4">
+                    <button type="button" id="reset-form-btn" class="w-full bg-gray-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-gray-600 transition-colors">
+                        New Bill
+                    </button>
+                </div>
+            </div>
+
+            <!-- Billing Summary Section -->
+            <div class="bg-card dark:bg-darkCard p-6 rounded-2xl shadow-lg h-fit">
+                <h2 class="text-xl md:text-2xl font-semibold text-primary mb-4">Billing Summary</h2>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center text-lg">
+                        <span>Total Bags:</span>
+                        <span id="total-bags" class="font-bold">0</span>
+                    </div>
+                    <div class="flex justify-between items-center text-lg">
+                        <span>Total Kgs:</span>
+                        <span id="total-kgs" class="font-bold">0.00 kg</span>
+                    </div>
+                    <div class="flex justify-between items-center text-lg font-semibold border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                        <span>Rate per Kg:</span>
+                        <span id="summary-rate" class="font-bold">₹0.00</span>
+                    </div>
+                    <div class="flex justify-between items-center text-2xl font-bold text-primary border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                        <span>Total Price:</span>
+                        <span id="total-price">₹0.00</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Saved Bills Modal -->
+    <div id="saved-bills-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div class="bg-card dark:bg-darkCard p-6 rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold text-primary">Saved Bills</h3>
+                <button id="close-modal-btn" class="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div id="saved-bills-list" class="space-y-4">
+                <p id="no-bills-message" class="text-center text-gray-500 dark:text-gray-400">No saved bills found.</p>
+            </div>
+            <div class="flex justify-end mt-6">
+                <button id="clear-all-bills-btn" class="bg-red-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-red-600 transition-colors">
+                    Clear All Bills
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Message/Confirmation Modal -->
+    <div id="message-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div class="bg-card dark:bg-darkCard p-6 rounded-2xl shadow-xl w-full max-w-sm">
+            <div id="modal-content">
+                <h4 id="modal-title" class="text-xl font-bold text-primary mb-2"></h4>
+                <p id="modal-message" class="text-gray-700 dark:text-gray-300 mb-4"></p>
+                <div id="modal-actions" class="flex justify-end space-x-2">
+                    <button id="modal-cancel-btn" class="bg-gray-300 text-gray-800 py-2 px-4 rounded-lg font-medium hover:bg-gray-400 transition-colors hidden">Cancel</button>
+                    <button id="modal-confirm-btn" class="bg-primary text-white py-2 px-4 rounded-lg font-medium hover:bg-indigo-600 transition-colors">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Printable Receipt Section (for a farmer's receipt) -->
+    <div id="print-receipt-container" class="print-container hidden p-8 max-w-3xl mx-auto bg-white text-gray-800">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-primary">Kamlesh Mandi</h1>
+            <p class="text-md text-gray-600">Nagdilpur, Dullahpur, Ghazipur up</p>
+            <p class="text-lg text-gray-600 mt-4">Bill for: <span id="receipt-farmer-name" class="font-semibold"></span></p>
+        </div>
+        <div class="space-y-6">
+            <div class="p-6 border border-gray-300 rounded-xl bg-gray-50">
+                <h2 class="text-2xl font-semibold text-primary mb-4">Bill Details</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <p><strong>Date:</strong> <span id="receipt-date"></span></p>
+                    <p><strong>Village:</strong> <span id="receipt-village-name"></span></p>
+                    <p><strong>Phone:</strong> <span id="receipt-phone-number"></span></p>
+                    <p><strong>Total Bags:</strong> <span id="receipt-total-bags">0</span></p>
+                    <p><strong>Total Kgs:</strong> <span id="receipt-total-kgs">0.00 kg</span></p>
+                </div>
+            </div>
+            <div class="p-6 border border-gray-300 rounded-xl bg-gray-50">
+                <h2 class="text-2xl font-semibold text-primary mb-4">Summary</h2>
+                <div class="space-y-2">
+                    <div class="flex justify-between font-medium text-lg">
+                        <span>Rate per Kg:</span>
+                        <span id="receipt-summary-rate">₹0.00</span>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 border-4 border-primary rounded-xl text-center bg-primary-100">
+                <div class="flex justify-between items-center text-3xl font-bold text-primary">
+                    <span>Total Price:</span>
+                    <span id="receipt-total-price" class="text-4xl">₹0.00</span>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-8 text-gray-500 text-sm">
+            <p>Thank you for your business!</p>
+        </div>
+    </div>
+
+    <script>
+        // DOM element references
+        const farmerNameInput = document.getElementById('farmer-name');
+        const villageNameInput = document.getElementById('village-name');
+        const phoneNumberInput = document.getElementById('phone-number');
+        const dateInput = document.getElementById('date');
+        const ratePerKgInput = document.getElementById('rate-per-kg');
+        const bagEntryContainer = document.getElementById('bag-entry-container');
+        const addBagBtn = document.getElementById('add-bag-btn');
+        const removeBagBtn = document.getElementById('remove-bag-btn');
+        const totalBagsSpan = document.getElementById('total-bags');
+        const totalKgsSpan = document.getElementById('total-kgs');
+        const summaryRateSpan = document.getElementById('summary-rate');
+        const totalPriceSpan = document.getElementById('total-price');
+        const saveBillBtn = document.getElementById('save-bill-btn');
+        const resetFormBtn = document.getElementById('reset-form-btn');
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const showSavedBillsBtn = document.getElementById('show-saved-bills');
+        const savedBillsModal = document.getElementById('saved-bills-modal');
+        const savedBillsList = document.getElementById('saved-bills-list');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const clearAllBillsBtn = document.getElementById('clear-all-bills-btn');
+        const noBillsMessage = document.getElementById('no-bills-message');
+        const messageModal = document.getElementById('message-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+        const modalCancelBtn = document.getElementById('modal-cancel-btn');
+        const printReceiptBtn = document.getElementById('print-receipt-btn');
+        const exportCsvBtn = document.getElementById('export-csv-btn');
+        const importCsvBtn = document.getElementById('import-csv-btn');
+        const csvFileInput = document.getElementById('csv-file-input');
+
+        // Initial setup
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set current date
+            const today = new Date().toISOString().slice(0, 10);
+            dateInput.value = today;
+
+            // Load theme from local storage
+            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('sun-icon').classList.remove('hidden');
+                document.getElementById('moon-icon').classList.add('hidden');
+            }
+
+            // Initial calculation
+            calculateTotals();
+        });
+
+        // Theme toggle functionality
+        themeToggleBtn.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                document.getElementById('sun-icon').classList.remove('hidden');
+                document.getElementById('moon-icon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                document.getElementById('moon-icon').classList.remove('hidden');
+                document.getElementById('sun-icon').classList.add('hidden');
+            }
+        });
+
+        // Function to create a new bag input field
+        const createBagInput = (bagNumber, value = '') => {
+            const bagDiv = document.createElement('div');
+            bagDiv.classList.add('flex', 'items-center', 'space-x-2', 'animate-fade-in');
+
+            const label = document.createElement('label');
+            label.htmlFor = `bag-${bagNumber}`;
+            label.textContent = `Bag ${bagNumber}`;
+            label.classList.add('w-16', 'flex-shrink-0', 'text-sm', 'font-medium');
+
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.id = `bag-${bagNumber}`;
+            input.classList.add('bag-weight-input', 'w-full', 'px-3', 'py-2', 'rounded-lg', 'bg-gray-100', 'dark:bg-gray-800', 'border', 'border-gray-300', 'dark:border-gray-600', 'focus:outline-none', 'focus:ring-2', 'focus:ring-primary', 'dark:focus:ring-indigo-400', 'transition-colors');
+            input.value = value;
+            input.min = '0';
+            input.placeholder = '0.00';
+            input.addEventListener('input', calculateTotals);
+
+            bagDiv.appendChild(label);
+            bagDiv.appendChild(input);
+            return bagDiv;
+        };
+
+        // Add initial bag input
+        const initialBagInput = bagEntryContainer.querySelector('.bag-weight-input');
+        if (initialBagInput) {
+            initialBagInput.addEventListener('input', calculateTotals);
+        }
+
+        // Add a new bag entry
+        addBagBtn.addEventListener('click', () => {
+            const bagCount = bagEntryContainer.querySelectorAll('.bag-weight-input').length;
+            const newBagInput = createBagInput(bagCount + 1);
+            bagEntryContainer.appendChild(newBagInput);
+            calculateTotals();
+        });
+
+        // Remove the last bag entry
+        removeBagBtn.addEventListener('click', () => {
+            const bagInputs = bagEntryContainer.querySelectorAll('.bag-weight-input');
+            if (bagInputs.length > 1) {
+                bagEntryContainer.lastElementChild.remove();
+                calculateTotals();
+            }
+        });
+
+        // Attach event listeners to calculation-related inputs
+        ratePerKgInput.addEventListener('input', calculateTotals);
+
+        // Main calculation function
+        function calculateTotals() {
+            const bagInputs = bagEntryContainer.querySelectorAll('.bag-weight-input');
+            let totalKgs = 0;
+            let totalBags = 0;
+            const ratePerKg = parseFloat(ratePerKgInput.value) || 0;
+
+            bagInputs.forEach(input => {
+                const weight = parseFloat(input.value);
+                if (!isNaN(weight) && weight > 0) {
+                    totalKgs += weight;
+                    totalBags++;
+                }
+            });
+
+            const totalPrice = totalKgs * ratePerKg;
+
+            totalKgsSpan.textContent = `${totalKgs.toFixed(2)} kg`;
+            totalBagsSpan.textContent = totalBags;
+            summaryRateSpan.textContent = `₹${ratePerKg.toFixed(2)}`;
+            totalPriceSpan.textContent = `₹${totalPrice.toFixed(2)}`;
+        }
+
+        // Show a custom modal message
+        const showMessageModal = (title, message, isConfirm = false, onConfirm = null) => {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            messageModal.classList.remove('hidden');
+
+            if (isConfirm) {
+                modalCancelBtn.classList.remove('hidden');
+                modalConfirmBtn.textContent = 'Confirm';
+                modalConfirmBtn.onclick = () => {
+                    if (onConfirm) onConfirm();
+                    messageModal.classList.add('hidden');
+                };
+                modalCancelBtn.onclick = () => {
+                    messageModal.classList.add('hidden');
+                };
+            } else {
+                modalCancelBtn.classList.add('hidden');
+                modalConfirmBtn.textContent = 'OK';
+                modalConfirmBtn.onclick = () => {
+                    messageModal.classList.add('hidden');
+                };
+            }
+        };
+
+        // Populate receipt content and print
+        printReceiptBtn.addEventListener('click', () => {
+            if (!farmerNameInput.value) {
+                showMessageModal('Validation Error', 'Please enter the farmer\'s name before printing a receipt.');
+                return;
+            }
+            document.getElementById('receipt-farmer-name').textContent = farmerNameInput.value || 'N/A';
+            document.getElementById('receipt-village-name').textContent = villageNameInput.value || 'N/A';
+            document.getElementById('receipt-phone-number').textContent = phoneNumberInput.value || 'N/A';
+            document.getElementById('receipt-date').textContent = dateInput.value;
+            document.getElementById('receipt-total-bags').textContent = totalBagsSpan.textContent;
+            document.getElementById('receipt-total-kgs').textContent = totalKgsSpan.textContent;
+            document.getElementById('receipt-summary-rate').textContent = summaryRateSpan.textContent;
+            document.getElementById('receipt-total-price').textContent = totalPriceSpan.textContent;
+            window.print();
+        });
+
+        // CSV export function
+        exportCsvBtn.addEventListener('click', () => {
+            const bagInputs = bagEntryContainer.querySelectorAll('.bag-weight-input');
+            const bagWeights = Array.from(bagInputs).map(input => parseFloat(input.value) || 0).filter(w => w > 0);
+            
+            const header = ['Farmer Name', 'Village Name', 'Phone Number', 'Date', 'Rate per Kg', 'Total Bags', 'Total Kgs', 'Total Price', 'Bag Weights'];
+            const data = [
+                farmerNameInput.value,
+                villageNameInput.value,
+                phoneNumberInput.value,
+                dateInput.value,
+                parseFloat(ratePerKgInput.value) || 0,
+                parseInt(totalBagsSpan.textContent),
+                parseFloat(totalKgsSpan.textContent),
+                parseFloat(totalPriceSpan.textContent.replace('₹', '')),
+                bagWeights.join('|') // Use a separator that won't appear in weights
+            ];
+
+            const csvContent = "data:text/csv;charset=utf-8," + header.join(',') + "\n" + data.join(',');
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `bill_${dateInput.value}_${farmerNameInput.value.replace(/\s/g, '_')}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+        // CSV import function
+        importCsvBtn.addEventListener('click', () => {
+            csvFileInput.click();
+        });
+
+        csvFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const csvData = event.target.result;
+                const lines = csvData.split('\n');
+                if (lines.length < 2) {
+                    showMessageModal('Error', 'Invalid CSV file format.');
+                    return;
+                }
+
+                const data = lines[1].split(',');
+                if (data.length !== 9) {
+                    showMessageModal('Error', 'Invalid CSV file format.');
+                    return;
+                }
+
+                farmerNameInput.value = data[0];
+                villageNameInput.value = data[1];
+                phoneNumberInput.value = data[2];
+                dateInput.value = data[3];
+                ratePerKgInput.value = data[4];
+
+                const bagWeights = data[8].split('|').map(w => parseFloat(w) || 0);
+                bagEntryContainer.innerHTML = '';
+                bagWeights.forEach((weight, i) => {
+                    bagEntryContainer.appendChild(createBagInput(i + 1, weight));
+                });
+                calculateTotals();
+                showMessageModal('Success', 'Data imported successfully!');
+            };
+            reader.readAsText(file);
+        });
+        
+        // Save bill to local storage
+        saveBillBtn.addEventListener('click', () => {
+            const farmerName = farmerNameInput.value;
+            if (!farmerName) {
+                showMessageModal('Error', 'Please enter the farmer\'s name to save the bill.');
+                return;
+            }
+        
+            const bagInputs = bagEntryContainer.querySelectorAll('.bag-weight-input');
+            const bagWeights = Array.from(bagInputs).map(input => parseFloat(input.value) || 0);
+        
+            const bill = {
+                farmerName: farmerName,
+                villageName: villageNameInput.value,
+                phoneNumber: phoneNumberInput.value,
+                date: dateInput.value,
+                ratePerKg: parseFloat(ratePerKgInput.value) || 0,
+                bagWeights: bagWeights,
+                totalBags: parseInt(totalBagsSpan.textContent),
+                totalKgs: parseFloat(totalKgsSpan.textContent),
+                totalPrice: parseFloat(totalPriceSpan.textContent.replace('₹', ''))
+            };
+        
+            let savedBills = JSON.parse(localStorage.getItem('mandiBills')) || [];
+            savedBills.unshift(bill); // Add to the beginning of the array
+            localStorage.setItem('mandiBills', JSON.stringify(savedBills));
+        
+            showMessageModal('Success', 'Bill saved successfully!');
+        });
+        
+        // Load bills from local storage and show modal
+        showSavedBillsBtn.addEventListener('click', () => {
+            savedBillsModal.classList.remove('hidden');
+            const savedBills = JSON.parse(localStorage.getItem('mandiBills')) || [];
+            savedBillsList.innerHTML = '';
+        
+            if (savedBills.length === 0) {
+                noBillsMessage.classList.remove('hidden');
+            } else {
+                noBillsMessage.classList.add('hidden');
+                savedBills.forEach((bill, index) => {
+                    const billDiv = document.createElement('div');
+                    billDiv.classList.add('bg-gray-100', 'dark:bg-gray-800', 'p-4', 'rounded-lg', 'flex', 'flex-col', 'sm:flex-row', 'justify-between', 'items-center', 'space-y-2', 'sm:space-y-0', 'animate-fade-in');
+                    billDiv.innerHTML = `
+                        <div>
+                            <p class="font-bold text-lg">${bill.farmerName}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Village: ${bill.villageName || 'N/A'}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Date: ${bill.date}</p>
+                            <p class="text-sm font-semibold text-primary">Total Price: ₹${(bill.totalPrice || 0).toFixed(2)}</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="load-bill-btn bg-primary text-white py-1 px-3 rounded-lg text-sm font-medium hover:bg-indigo-600 transition-colors" data-index="${index}">Load</button>
+                            <button class="delete-bill-btn bg-red-500 text-white py-1 px-3 rounded-lg text-sm font-medium hover:bg-red-600 transition-colors" data-index="${index}">Delete</button>
+                        </div>
+                    `;
+                    savedBillsList.appendChild(billDiv);
+                });
+            }
+        });
+        
+        // Event listener for loading a saved bill
+        savedBillsList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('load-bill-btn')) {
+                const index = e.target.dataset.index;
+                const savedBills = JSON.parse(localStorage.getItem('mandiBills')) || [];
+                const bill = savedBills[index];
+                if (bill) {
+                    farmerNameInput.value = bill.farmerName;
+                    villageNameInput.value = bill.villageName;
+                    phoneNumberInput.value = bill.phoneNumber;
+                    dateInput.value = bill.date;
+                    ratePerKgInput.value = bill.ratePerKg;
+        
+                    // Clear and repopulate bag entries
+                    bagEntryContainer.innerHTML = '';
+                    bill.bagWeights.forEach((weight, i) => {
+                        const newBagInput = createBagInput(i + 1, weight);
+                        bagEntryContainer.appendChild(newBagInput);
+                    });
+                    
+                    calculateTotals();
+                    savedBillsModal.classList.add('hidden');
+                }
+            } else if (e.target.classList.contains('delete-bill-btn')) {
+                const indexToDelete = parseInt(e.target.dataset.index);
+                let savedBills = JSON.parse(localStorage.getItem('mandiBills')) || [];
+                savedBills.splice(indexToDelete, 1);
+                localStorage.setItem('mandiBills', JSON.stringify(savedBills));
+                // Re-render the saved bills list
+                showSavedBillsBtn.click();
+            }
+        });
+
+        // Close modal button
+        closeModalBtn.addEventListener('click', () => {
+            savedBillsModal.classList.add('hidden');
+        });
+        
+        // Clear all saved bills
+        clearAllBillsBtn.addEventListener('click', () => {
+            showMessageModal(
+                'Confirm Action', 
+                'Are you sure you want to delete all saved bills? This action cannot be undone.', 
+                true, 
+                () => {
+                    localStorage.removeItem('mandiBills');
+                    showSavedBillsBtn.click();
+                }
+            );
+        });
+        
+        // Reset form functionality
+        resetFormBtn.addEventListener('click', () => {
+            document.getElementById('billing-form').reset();
+            dateInput.value = new Date().toISOString().slice(0, 10);
+            bagEntryContainer.innerHTML = '';
+            bagEntryContainer.appendChild(createBagInput(1));
+            ratePerKgInput.value = "0.00";
+            calculateTotals();
+        });
+
+        // Add input event listeners to dynamically added bags
+        bagEntryContainer.addEventListener('input', (e) => {
+            if (e.target.classList.contains('bag-weight-input')) {
+                calculateTotals();
+            }
+        });
+
+    </script>
+</body>
+</html>
